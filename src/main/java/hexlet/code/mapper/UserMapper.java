@@ -29,5 +29,5 @@ public abstract class UserMapper {
     public abstract UserCreateDTO mapToCreateDTO(User model);
 
     @Mapping(source = "password", target = "passwordDigest")
-    public abstract User map(UserCreateDTO carDTO);
+    public abstract User map(UserCreateDTO userDTO);
 }
