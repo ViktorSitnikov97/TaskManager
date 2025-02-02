@@ -42,6 +42,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-devtools")
 
+//	implementation("org.springframework.boot:spring-boot-starter-security")
+//	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
 	runtimeOnly("com.h2database:h2")
 	implementation("org.postgresql:postgresql:42.7.2")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -51,7 +54,8 @@ dependencies {
 	implementation("org.instancio:instancio-junit:5.0.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2") // формирование JSON-ответа
 	testImplementation(platform("org.junit:junit-bom:5.10.0"))
 	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
