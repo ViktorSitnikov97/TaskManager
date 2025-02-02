@@ -1,4 +1,4 @@
-package hexlet.code.controller;
+package hexlet.code.controller.api;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ public final class WelcomeControllerTest {
 
     @Test
     public void testGreeting() throws Exception {
-        var result = mockMvc.perform(get("/welcome"))
+        var result = mockMvc.perform(get("/api/welcome"))
                 .andExpect(status().isOk())
                 .andReturn();
 
