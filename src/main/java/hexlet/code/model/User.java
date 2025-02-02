@@ -1,6 +1,7 @@
 package hexlet.code.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -31,9 +32,11 @@ public class User {
 
     private String lastName;
 
+    @Column(unique = true)
     private String email;
 
-    private String password;
+    @Column(nullable = false)
+    private String passwordDigest;
 
     @LastModifiedDate
     private LocalDate updateAt;
