@@ -6,17 +6,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
 
 @Component
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
-//    @Autowired
-//    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private final UserRepository userRepository;
@@ -29,8 +30,7 @@ public class DataInitializer implements ApplicationRunner {
         if (firstUser.isEmpty()) {
             var userData = new User();
             userData.setEmail(email);
-//            userData.setPassword(passwordEncoder.encode(rawPassword));
-            userData.setPasswordDigest(rawPassword);
+            userData.setPasswordDigest(passwordEncoder.encode(rawPassword));
             userRepository.save(userData);
         }
     }
