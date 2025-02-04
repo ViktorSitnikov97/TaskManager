@@ -52,7 +52,7 @@ public class UserController {
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("@userUtils.isAuthor(#id)")
+    @PreAuthorize("@userUtils.isAuthor(#id)")
     public UserDTO update(@Valid @RequestBody UserUpdateDTO data, @PathVariable Long id) {
         return userService.update(data, id);
     }
