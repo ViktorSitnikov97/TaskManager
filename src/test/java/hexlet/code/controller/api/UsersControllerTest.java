@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -49,6 +51,8 @@ class UsersControllerTest {
     @Autowired
     private ModelGenerator modelGenerator;
 
+    private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
+
     private User testUser;
 
     @BeforeEach
@@ -57,6 +61,8 @@ class UsersControllerTest {
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
+
+        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
     }
 
     @AfterEach
@@ -67,7 +73,7 @@ class UsersControllerTest {
     @Test
     public void testIndex() throws Exception {
         userRepository.save(testUser);
-        var result = mockMvc.perform(get("/api/users"))
+        var result = mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -80,7 +86,7 @@ class UsersControllerTest {
 
         userRepository.save(testUser);
 
-        var request = get("/api/users/{id}", testUser.getId());
+        var request = get("/api/users/{id}", testUser.getId()).with(jwt());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
@@ -119,6 +125,7 @@ class UsersControllerTest {
         dto.setLastName("");
 
         var request = post("/api/users")
+                .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(dto));
 
@@ -136,6 +143,7 @@ class UsersControllerTest {
         dto.setLastName("new last name");
 
         var request = put("/api/users/{id}", testUser.getId())
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(dto));
 
@@ -157,6 +165,7 @@ class UsersControllerTest {
         dto.put("firstName", "another first name");
 
         var request = put("/api/users/{id}", testUser.getId())
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(dto));
 
@@ -174,7 +183,7 @@ class UsersControllerTest {
     @Test
     public void testDestroy() throws Exception {
         userRepository.save(testUser);
-        var request = delete("/api/users/{id}", testUser.getId());
+        var request = delete("/api/users/{id}", testUser.getId()).with(token);
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
