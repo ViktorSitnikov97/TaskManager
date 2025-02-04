@@ -57,7 +57,7 @@ public class UserService implements UserDetailsManager {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id = " + id + " not found"));
         mapper.update(data, user);
-        if (!(data.getPassword() == null)) { // isPresent()
+        if (!(data.getPassword() == null)) {
             user.setPasswordDigest(passwordEncoder.encode(data.getPassword().get()));
         }
         userRepository.save(user);
@@ -65,9 +65,7 @@ public class UserService implements UserDetailsManager {
     }
 
     public void destroy(Long id) {
-        var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id = " + id + " not found"));
-        userRepository.delete(user);
+        userRepository.deleteById(id);
     }
 
     @Override
