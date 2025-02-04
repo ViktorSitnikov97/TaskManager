@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/api")
 public class AuthenticationController {
     @Autowired
     private JWTUtils jwtUtils;
@@ -21,11 +21,11 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping(path = "")
+    @PostMapping(path = "/login")
     public String create(@RequestBody AuthRequest authRequest) {
         var authentication = new UsernamePasswordAuthenticationToken(
                 authRequest.getUsername(), authRequest.getPassword());
-        log.info(authRequest.getPassword());
+
         authenticationManager.authenticate(authentication);
 
         var token = jwtUtils.generateToken(authRequest.getUsername());
