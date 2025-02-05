@@ -59,8 +59,6 @@ class UsersControllerTest {
 
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
-    private User admin;
-
     private User testUser;
 
     @BeforeEach
