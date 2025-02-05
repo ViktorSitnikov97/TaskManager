@@ -1,12 +1,13 @@
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.dto.users.UserCreateDTO;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
+import net.datafaker.Faker;
 import org.instancio.Instancio;
+import org.instancio.Select;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,12 @@ class UsersControllerTest {
     @Autowired
     private ModelGenerator modelGenerator;
 
+    @Autowired
+    private Faker faker;
+
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
+
+    private User admin;
 
     private User testUser;
 
@@ -63,9 +69,10 @@ class UsersControllerTest {
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
                 .build();
+
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
     @AfterEach
@@ -139,14 +146,14 @@ class UsersControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        var dto = new UserCreateDTO();
-
+        userRepository.save(testUser);
+        var dto = mapper.mapToCreateDTO(testUser);
         dto.setFirstName("new name");
         dto.setLastName("new last name");
         dto.setPassword("qwerty");
         dto.setEmail("new@mail.com");
 
-        var request = put("/api/users/{id}", 1L)
+        var request = put("/api/users/{id}", testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(dto));
@@ -154,7 +161,7 @@ class UsersControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var userAfterUpdate = userRepository.findById(1L).orElse(null);
+        var userAfterUpdate = userRepository.findById(testUser.getId()).orElse(null);
 
         assertThat(userAfterUpdate).isNotNull();
         assertThat(userAfterUpdate.getFirstName()).isEqualTo(dto.getFirstName());
@@ -163,31 +170,10 @@ class UsersControllerTest {
 
     @Test
     public void testPartialUpdate() throws Exception {
-        var dto = new HashMap<String, String>();
-        dto.put("firstName", "another first name");
-
-        var user = userRepository.findById(1L).orElse(null);
-
-        var request = put("/api/users/{id}", 1L)
-                .with(token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(dto));
-
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-
-        var userAfterPartialUpdate = userRepository.findById(1L).orElse(null);
-
-        assertThat(userAfterPartialUpdate).isNotNull();
-        assertThat(userAfterPartialUpdate.getEmail()).isEqualTo(user.getEmail());
-        assertThat(userAfterPartialUpdate.getFirstName()).isEqualTo(dto.get("firstName"));
-    }
-
-    @Test
-    public void testUpdateAnotherUser() throws Exception {
         userRepository.save(testUser);
 
-        var dto = mapper.mapToCreateDTO(testUser);
+        var dto = new HashMap<String, String>();
+        dto.put("firstName", "another first name");
 
         var request = put("/api/users/{id}", testUser.getId())
                 .with(token)
@@ -195,26 +181,65 @@ class UsersControllerTest {
                 .content(om.writeValueAsString(dto));
 
         mockMvc.perform(request)
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
+
+        var userAfterPartialUpdate = userRepository.findById(testUser.getId()).orElse(null);
+
+        assertThat(userAfterPartialUpdate).isNotNull();
+        assertThat(userAfterPartialUpdate.getEmail()).isEqualTo(testUser.getEmail());
+        assertThat(userAfterPartialUpdate.getFirstName()).isEqualTo(dto.get("firstName"));
     }
 
     @Test
     public void testDestroy() throws Exception {
-        var request = delete("/api/users/{id}", 1L).with(token);
+        userRepository.save(testUser);
+        var request = delete("/api/users/{id}", testUser.getId()).with(token);
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
-        assertThat(userRepository.existsById(1L)).isEqualTo(false);
+        assertThat(userRepository.existsById(testUser.getId())).isEqualTo(false);
+    }
+
+    @Test
+    public void testUpdateAnotherUser() throws Exception {
+        userRepository.save(testUser);
+        User user = Instancio.of(User.class)
+                .ignore(Select.field(User::getId))
+                .supply(Select.field(User::getFirstName), () -> faker.name().firstName())
+                .supply(Select.field(User::getLastName), () -> faker.name().lastName())
+                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
+                .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password())
+                .create();
+
+        userRepository.save(user);
+        var dto = mapper.mapToCreateDTO(user);
+
+        var request = put("/api/users/{id}", user.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(dto));
+
+        mockMvc.perform(request)
+                .andExpect(status().isForbidden());
     }
 
     @Test
     public void testDestroyAnotherUser() throws Exception {
+
         userRepository.save(testUser);
 
-        var request = delete("/api/users/{id}", testUser.getId()).with(token);
+        var newUser = new User();
+        newUser.setFirstName("new name");
+        newUser.setLastName("new last name");
+        newUser.setPasswordDigest("$$$$$$$$$");
+        newUser.setEmail("new@mail.com");
+
+        userRepository.save(newUser);
+
+        var request = delete("/api/users/{id}", newUser.getId()).with(token);
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
 
-        assertThat(userRepository.existsById(testUser.getId())).isTrue();
+        assertThat(userRepository.existsById(newUser.getId())).isTrue();
     }
 }
