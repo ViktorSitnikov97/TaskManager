@@ -7,7 +7,6 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
-import org.instancio.Select;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -201,18 +200,12 @@ class UsersControllerTest {
     @Test
     public void testUpdateAnotherUser() throws Exception {
         userRepository.save(testUser);
-        User user = Instancio.of(User.class)
-                .ignore(Select.field(User::getId))
-                .supply(Select.field(User::getFirstName), () -> faker.name().firstName())
-                .supply(Select.field(User::getLastName), () -> faker.name().lastName())
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password())
-                .create();
 
-        userRepository.save(user);
-        var dto = mapper.mapToCreateDTO(user);
+        User secondUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(secondUser);
+        var dto = mapper.mapToCreateDTO(secondUser);
 
-        var request = put("/api/users/{id}", user.getId())
+        var request = put("/api/users/{id}", secondUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(dto));
@@ -223,21 +216,15 @@ class UsersControllerTest {
 
     @Test
     public void testDestroyAnotherUser() throws Exception {
-
         userRepository.save(testUser);
 
-        var newUser = new User();
-        newUser.setFirstName("new name");
-        newUser.setLastName("new last name");
-        newUser.setPasswordDigest("$$$$$$$$$");
-        newUser.setEmail("new@mail.com");
+        User secondUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(secondUser);
 
-        userRepository.save(newUser);
-
-        var request = delete("/api/users/{id}", newUser.getId()).with(token);
+        var request = delete("/api/users/{id}", secondUser.getId()).with(token);
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
 
-        assertThat(userRepository.existsById(newUser.getId())).isTrue();
+        assertThat(userRepository.existsById(secondUser.getId())).isTrue();
     }
 }
