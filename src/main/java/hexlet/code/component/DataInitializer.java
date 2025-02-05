@@ -6,16 +6,16 @@ import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.instancio.internal.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 
