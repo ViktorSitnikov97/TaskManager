@@ -1,6 +1,7 @@
 package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.users.UserCreateDTO;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -68,6 +69,7 @@ class UsersControllerTest {
                 .build();
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(testUser);
 
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
@@ -79,7 +81,6 @@ class UsersControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        userRepository.save(testUser);
         var result = mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -90,9 +91,6 @@ class UsersControllerTest {
 
     @Test
     public void testShow() throws Exception {
-
-        userRepository.save(testUser);
-
         var request = get("/api/users/{id}", testUser.getId()).with(jwt());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -108,7 +106,11 @@ class UsersControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        var dto = mapper.mapToCreateDTO(testUser);
+        var dto = new UserCreateDTO();
+        dto.setFirstName("first name");
+        dto.setLastName("last name");
+        dto.setPassword("asdfAndQwerty");
+        dto.setEmail("qwerty@mail.com");
 
         var request = post("/api/users")
                 .with(jwt())
@@ -119,12 +121,12 @@ class UsersControllerTest {
                 .andExpect(status().isCreated());
 
         var user = userRepository.findByFirstNameAndLastName(
-                testUser.getFirstName(), testUser.getLastName()).orElse(null);
+                dto.getFirstName(), dto.getLastName()).orElse(null);
 
         assertThat(user).isNotNull();
-        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
-        assertThat(user.getLastName()).isEqualTo(testUser.getLastName());
-        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
+        assertThat(user.getFirstName()).isEqualTo(dto.getFirstName());
+        assertThat(user.getLastName()).isEqualTo(dto.getLastName());
+        assertThat(user.getEmail()).isEqualTo(dto.getEmail());
     }
 
     @Test
@@ -143,7 +145,6 @@ class UsersControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        userRepository.save(testUser);
         var dto = mapper.mapToCreateDTO(testUser);
         dto.setFirstName("new name");
         dto.setLastName("new last name");
@@ -167,8 +168,6 @@ class UsersControllerTest {
 
     @Test
     public void testPartialUpdate() throws Exception {
-        userRepository.save(testUser);
-
         var dto = new HashMap<String, String>();
         dto.put("firstName", "another first name");
 
@@ -189,7 +188,6 @@ class UsersControllerTest {
 
     @Test
     public void testDestroy() throws Exception {
-        userRepository.save(testUser);
         var request = delete("/api/users/{id}", testUser.getId()).with(token);
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
@@ -199,8 +197,6 @@ class UsersControllerTest {
 
     @Test
     public void testUpdateAnotherUser() throws Exception {
-        userRepository.save(testUser);
-
         User secondUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(secondUser);
         var dto = mapper.mapToCreateDTO(secondUser);
@@ -216,8 +212,6 @@ class UsersControllerTest {
 
     @Test
     public void testDestroyAnotherUser() throws Exception {
-        userRepository.save(testUser);
-
         User secondUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(secondUser);
 
