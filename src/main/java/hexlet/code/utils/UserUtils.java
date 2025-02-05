@@ -29,8 +29,4 @@ public class UserUtils {
         var user = Optional.ofNullable(getCurrentUser()).orElse(new User());
         return Objects.equals(user.getId(), id);
     }
-    public User getTestUser() {
-        return  userRepository.findByEmail("hexlet@example.com")
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
 }

@@ -22,5 +22,4 @@ public class UserUpdateDTO {
 
     @Pattern(regexp = "\\w{6,}")
     private JsonNullable<String> password;
-
 }
