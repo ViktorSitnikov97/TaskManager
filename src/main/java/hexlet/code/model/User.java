@@ -33,7 +33,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails { // BaseEntity,
+public class User implements BaseEntity, UserDetails {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

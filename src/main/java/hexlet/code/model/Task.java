@@ -37,7 +37,6 @@ public class Task implements BaseEntity {
     @Column(columnDefinition = "text")
     private String description;
 
-    @NotBlank
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "task_status_id", nullable = false)
     private TaskStatus taskStatus;
