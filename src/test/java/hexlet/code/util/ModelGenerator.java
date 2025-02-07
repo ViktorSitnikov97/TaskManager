@@ -48,7 +48,7 @@ public class ModelGenerator {
                 .ignore(Select.field(Task::getAssignee))
                 .ignore(Select.field(Task::getTaskStatus))
                 .supply(Select.field(Task::getName), () -> faker.lorem().characters(3, 14))
-                .supply(Select.field(Task::getDescription), () -> faker.lorem().words(7))
+                .supply(Select.field(Task::getDescription), () -> faker.lorem().word())
                 .supply(Select.field(Task::getIndex), () -> faker.number().numberBetween(1024, 32768))
                 .ignore(Select.field(Task::getCreatedAt))
                 .toModel();
