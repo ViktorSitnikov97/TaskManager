@@ -2,6 +2,7 @@ package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.users.UserCreateDTO;
+
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +33,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -149,7 +150,7 @@ class UsersControllerTest {
         dto.setFirstName("new name");
         dto.setLastName("new last name");
         dto.setPassword("qwerty");
-        dto.setEmail("new@mail.com");
+//        dto.setEmail("new@mail.com");
 
         var request = put("/api/users/{id}", testUser.getId())
                 .with(token)
@@ -168,8 +169,11 @@ class UsersControllerTest {
 
     @Test
     public void testPartialUpdate() throws Exception {
-        var dto = new HashMap<String, String>();
-        dto.put("firstName", "another first name");
+        var dto = mapper.mapToCreateDTO(testUser);
+        dto.setFirstName("new name");
+        dto.setLastName("new last name");
+        dto.setEmail(null);
+        dto.setPassword(null);
 
         var request = put("/api/users/{id}", testUser.getId())
                 .with(token)
@@ -183,7 +187,7 @@ class UsersControllerTest {
 
         assertThat(userAfterPartialUpdate).isNotNull();
         assertThat(userAfterPartialUpdate.getEmail()).isEqualTo(testUser.getEmail());
-        assertThat(userAfterPartialUpdate.getFirstName()).isEqualTo(dto.get("firstName"));
+        assertThat(userAfterPartialUpdate.getFirstName()).isEqualTo(dto.getFirstName());
     }
 
     @Test
