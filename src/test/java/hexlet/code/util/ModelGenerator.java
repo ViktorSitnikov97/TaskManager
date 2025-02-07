@@ -1,5 +1,6 @@
 package hexlet.code.util;
 
+import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
 import jakarta.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class ModelGenerator {
     private Model<User> userModel;
     private Model<TaskStatus> taskStatusModel;
+    private Model<Task> taskModel;
 
     @Autowired
     private Faker faker;
@@ -28,12 +30,27 @@ public class ModelGenerator {
                 .supply(Select.field(User::getLastName), () -> faker.name().lastName())
                 .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
                 .supply(Select.field(User::getPasswordDigest), () -> faker.internet().password())
+                .ignore(Select.field(User::getTasks))
+                .ignore(Select.field(User::getUpdatedAt))
+                .ignore(Select.field(User::getCreatedAt))
                 .toModel();
 
         taskStatusModel = Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
                 .supply(Select.field(TaskStatus::getName), () -> faker.superhero().name())
-                .supply(Select.field(TaskStatus::getSlug), () -> faker.name().title())
+                .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
+                .ignore(Select.field(TaskStatus::getTasks))
+                .ignore(Select.field(TaskStatus::getCreatedAt))
+                .toModel();
+
+        taskModel = Instancio.of(Task.class)
+                .ignore(Select.field(Task::getId))
+                .ignore(Select.field(Task::getAssignee))
+                .ignore(Select.field(Task::getTaskStatus))
+                .supply(Select.field(Task::getName), () -> faker.lorem().characters(3, 14))
+                .supply(Select.field(Task::getDescription), () -> faker.lorem().words(7))
+                .supply(Select.field(Task::getIndex), () -> faker.number().numberBetween(1024, 32768))
+                .ignore(Select.field(Task::getCreatedAt))
                 .toModel();
     }
 }
