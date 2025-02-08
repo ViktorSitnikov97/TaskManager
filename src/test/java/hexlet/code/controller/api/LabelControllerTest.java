@@ -2,7 +2,6 @@ package hexlet.code.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.labels.LabelCreateDTO;
-import hexlet.code.dto.taskStatuses.TaskStatusCreateDTO;
 import hexlet.code.mapper.LabelMapper;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
@@ -19,9 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
