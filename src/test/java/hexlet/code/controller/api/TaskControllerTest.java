@@ -124,6 +124,62 @@ public class TaskControllerTest {
     }
 
     @Test
+    public void testIndexWithTitleCount() throws Exception {
+        var testTitleCount = testTask.getName();
+        var result = mockMvc.perform(get("/api/tasks?titleCount=" + testTitleCount).with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().allSatisfy(element ->
+                assertThatJson(element)
+                        .and(v -> v.node("title").asString().containsIgnoringCase(testTitleCount))
+        );
+    }
+
+    @Test
+    public void testIndexWithAssigneeId() throws Exception {
+        var testAssigneeId = testUser.getId();
+        var result = mockMvc.perform(get("/api/tasks?assigneeId=" + testAssigneeId).with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().allSatisfy(element ->
+                assertThatJson(element)
+                        .and(v -> v.node("assignee_id").isEqualTo(testAssigneeId))
+        );
+    }
+
+    @Test
+    public void testIndexWithStatus() throws Exception {
+        var testStatus = testTaskStatus.getSlug();
+        var result = mockMvc.perform(get("/api/tasks?status=" + testStatus).with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().allSatisfy(element ->
+                assertThatJson(element)
+                        .and(v -> v.node("status").isEqualTo(testStatus))
+        );
+    }
+
+    @Test
+    public void testIndexWithLabelId() throws Exception {
+        var testLabelId = testLabel.getId();
+        var result = mockMvc.perform(get("/api/tasks?labelId=" + testLabelId).with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().allSatisfy(element ->
+                assertThatJson(element)
+                        .and(v -> v.node("taskLabelsIds").isArray().contains(testLabelId))
+        );
+    }
+
+    @Test
     public void testShow() throws Exception {
         var request = get("/api/tasks/{id}", testTask.getId()).with(jwt());
         var result = mockMvc.perform(request)
