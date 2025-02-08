@@ -53,7 +53,7 @@ public class Task implements BaseEntity {
     @JoinColumn(name = "assignee_id")
     private User assignee;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "tasks_labels",
             joinColumns = @JoinColumn(name = "task_id"),
