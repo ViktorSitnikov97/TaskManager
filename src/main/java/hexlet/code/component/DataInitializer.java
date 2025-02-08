@@ -1,7 +1,9 @@
 package hexlet.code.component;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -26,32 +28,34 @@ public class DataInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TaskStatusRepository taskStatusRepository;
+    private final LabelRepository labelRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        var userData = supplyAdmin();
-        userRepository.save(userData);
+        userRepository.save(supplyAdminData());
 
-        for (var taskStatus : supplyTaskStatuses()) {
+        for (var taskStatus : supplyTaskStatusesData()) {
             taskStatusRepository.save(taskStatus);
         }
 
-
+        for (var label : supplyLabelsData()) {
+            labelRepository.save(label);
+        }
     }
 
-    private User supplyAdmin() {
+    private User supplyAdminData() {
         var email = "hexlet@example.com";
-        var rawPassword = "qwerty";
+        var rawPassword = "password";
         var user = new User();
         user.setEmail(email);
         user.setPasswordDigest(passwordEncoder.encode(rawPassword));
         return user;
     }
-    private List<TaskStatus> supplyTaskStatuses() {
-        var nameTaskStatuses =  List.of("draft", "to_review", "to_be_fixed", "to_publish", "published");
+    private List<TaskStatus> supplyTaskStatusesData() {
+        var taskStatusesNames =  List.of("draft", "to_review", "to_be_fixed", "to_publish", "published");
 
-        return nameTaskStatuses.stream()
+        return taskStatusesNames.stream()
                 .map(slug -> {
                     var name = Arrays.stream(slug.split("_"))
                             .map(StringUtils::capitalise)
@@ -64,5 +68,15 @@ public class DataInitializer implements ApplicationRunner {
                 .collect(Collectors.toList());
     }
 
+    private List<Label> supplyLabelsData() {
+        var labelsNames = List.of("feature", "bug");
+        return labelsNames.stream()
+                .map(name -> {
+                    var label = new Label();
+                    label.setName(name);
+                    return label;
+                })
+                .toList();
+    }
 
 }
