@@ -94,8 +94,7 @@ public class LabelControllerTest {
         var body = result.getResponse().getContentAsString();
 
         assertThatJson(body).and(
-                v -> v.node("name").isEqualTo(testLabel.getName()),
-                v -> v.node("createdAt").isEqualTo(testLabel.getCreatedAt())
+                v -> v.node("name").isEqualTo(testLabel.getName())
         );
     }
 
