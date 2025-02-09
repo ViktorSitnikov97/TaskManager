@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -yq make unzip
 
 WORKDIR /
 
-COPY ./ .
+COPY . .
 
 RUN ./gradlew installDist
 
