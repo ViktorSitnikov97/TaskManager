@@ -1,13 +1,12 @@
 plugins {
 	id("application")
+	id("checkstyle")
+	id("jacoco")
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("io.freefair.lombok") version "8.6"
 
-	checkstyle
-	id("checkstyle")
-
-	jacoco
+	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 group = "hexlet.code"
@@ -48,6 +47,8 @@ dependencies {
 	implementation("org.postgresql:postgresql:42.7.2")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 
 	implementation("net.datafaker:datafaker:2.4.0")
 	implementation("org.instancio:instancio-junit:5.0.1")
