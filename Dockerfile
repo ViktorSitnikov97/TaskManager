@@ -2,16 +2,14 @@ FROM eclipse-temurin:21-jdk
 
 ARG GRADLE_VERSION=8.5
 
-RUN apt-get update && apt-get install -yq make unzip
+# Устанавливаем рабочую директорию
+WORKDIR /app
 
-WORKDIR /
-
+# Копируем все файлы проекта в рабочую директорию
 COPY . .
 
+# Запускаем команду для сборки и установки приложения
 RUN gradle installDist
 
-ENV SPRING_PROFILES_ACTIVE=production
-
-CMD java -jar build/libs/app-0.0.1-SNAPSHOT.jar
-
-EXPOSE 8080
+# Запускаем приложение с указанием профиля
+CMD ["java", "-cp", "/app/build/install/app/lib/*:/app/build/install/app/bin", "hexlet.code.AppApplication", "--spring.profiles.active=production"]
