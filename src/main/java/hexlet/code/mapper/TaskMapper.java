@@ -40,21 +40,21 @@ public abstract class TaskMapper {
     @Mapping(target = "assignee", source = "assigneeId")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "taskStatus", source = "status", qualifiedByName = "getTaskStatusByStatusSlug")
-    @Mapping(target = "labels", source = "taskLabelsIds", qualifiedByName = "getLabelsBySetIds")
+    @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "getLabelsBySetIds")
     public abstract Task map(TaskCreateDTO data);
 
     @Mapping(target = "assigneeId", source = "assignee.id")
     @Mapping(target = "content", source = "description")
     @Mapping(target = "status", source = "taskStatus.slug")
     @Mapping(target = "title", source = "name")
-    @Mapping(target = "taskLabelsIds", source = "labels", qualifiedByName = "getIdsBySetLabels")
+    @Mapping(target = "taskLabelIds", source = "labels", qualifiedByName = "getIdsBySetLabels")
     public abstract TaskDTO map(Task model);
 
     @Mapping(target = "name", source = "title")
     @Mapping(target = "assignee", source = "assigneeId")
     @Mapping(target = "description", source = "content")
     @Mapping(target = "taskStatus", source = "status", qualifiedByName = "getTaskStatusByStatusSlug")
-    @Mapping(target = "labels", source = "taskLabelsIds", qualifiedByName = "getLabelsBySetIds")
+    @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "getLabelsBySetIds")
     public abstract void update(TaskUpdateDTO data, @MappingTarget Task model);
 
 
@@ -62,7 +62,7 @@ public abstract class TaskMapper {
     @Mapping(target = "content", source = "description")
     @Mapping(target = "status", source = "taskStatus.slug")
     @Mapping(target = "title", source = "name")
-    @Mapping(target = "taskLabelsIds", source = "labels", qualifiedByName = "getIdsBySetLabels")
+    @Mapping(target = "taskLabelIds", source = "labels", qualifiedByName = "getIdsBySetLabels")
     public abstract TaskCreateDTO mapToCreateDTO(Task model);
 
 
@@ -75,23 +75,15 @@ public abstract class TaskMapper {
     }
 
     @Named("getLabelsBySetIds")
-    public Set<Label> getLabelsBSetIds(Set<Long> ids) {
-        return ids == null
-                ?
-                new HashSet<>()
-                :
-                labelRepository.findByIdIn(ids);
+    public Set<Label> getLabelsBySetIds(Set<Long> ids) {
+        return ids == null ? new HashSet<>() : labelRepository.findByIdIn(ids);
     }
 
     @Named("getIdsBySetLabels")
     public Set<Long> getIdsBySetLabels(Set<Label> labels) {
-        return labels == null
-                ?
-                new HashSet<>()
-                :
-                labels.stream()
-                        .map(Label::getId)
-                        .collect(Collectors.toSet());
+        return labels == null ? new HashSet<>() : labels.stream()
+                .map(Label::getId)
+                .collect(Collectors.toSet());
     }
 
 }

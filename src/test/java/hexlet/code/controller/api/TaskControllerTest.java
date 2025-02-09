@@ -175,7 +175,7 @@ public class TaskControllerTest {
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray().allSatisfy(element ->
                 assertThatJson(element)
-                        .and(v -> v.node("taskLabelsIds").isArray().contains(testLabelId))
+                        .and(v -> v.node("taskLabelIds").isArray().contains(testLabelId))
         );
     }
 
@@ -194,7 +194,7 @@ public class TaskControllerTest {
                 v -> v.node("title").isEqualTo(testTask.getName()),
                 v -> v.node("content").isEqualTo(testTask.getDescription()),
                 v -> v.node("status").isEqualTo(testTask.getTaskStatus().getSlug()),
-                v -> v.node("taskLabelsIds").isEqualTo(
+                v -> v.node("taskLabelIds").isEqualTo(
                         testTask.getLabels().stream().map(Label::getId).collect(Collectors.toSet())
                 )
         );
@@ -215,7 +215,7 @@ public class TaskControllerTest {
 
         var dto = mapper.mapToCreateDTO(testTask);
         dto.setStatus(taskStatusNew.getSlug());
-        dto.setTaskLabelsIds(JsonNullable.of(taskLabelsIds));
+        dto.setTaskLabelIds(taskLabelsIds);
         dto.setTitle("newTask");
 
         var request = post("/api/tasks")
@@ -237,7 +237,7 @@ public class TaskControllerTest {
                 task.getLabels().stream()
                         .map(Label::getId)
                         .collect(Collectors.toSet())
-        ).isEqualTo(dto.getTaskLabelsIds().get());
+        ).isEqualTo(dto.getTaskLabelIds());
     }
 
     @Test
@@ -275,7 +275,7 @@ public class TaskControllerTest {
         dto.setContent(JsonNullable.of("Tasks Content"));
         dto.setAssigneeId(JsonNullable.of(newTestUser.getId()));
         dto.setStatus(newTestTaskStatus.getSlug());
-        dto.setTaskLabelsIds(JsonNullable.of(taskLabelsIds));
+        dto.setTaskLabelIds(JsonNullable.of(taskLabelsIds));
 
         var request = put("/api/tasks/{id}", testTask.getId())
                 .with(jwt())
@@ -296,7 +296,7 @@ public class TaskControllerTest {
                 taskAfterUpdate.getLabels().stream()
                         .map(Label::getId)
                         .collect(Collectors.toSet())
-        ).isEqualTo(dto.getTaskLabelsIds().get());
+        ).isEqualTo(dto.getTaskLabelIds().get());
     }
 
     @Test
