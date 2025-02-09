@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskSpecification {
     public Specification<Task> build(TaskParamsDTO params) {
-        return withTitleCont(params.getTitleCount())
+        return withTitleCont(params.getTitleCont())
                 .and(withAssigneeId(params.getAssigneeId()))
                 .and(withStatus(params.getStatus()))
                 .and(withLabel(params.getLabelId()));
