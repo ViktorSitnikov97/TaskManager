@@ -8,7 +8,7 @@ WORKDIR /
 
 COPY . .
 
-RUN ./gradlew installDist
+RUN gradle installDist
 
 ENV SPRING_PROFILES_ACTIVE=production
 
