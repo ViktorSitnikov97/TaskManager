@@ -13,18 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskSpecification {
     public Specification<Task> build(TaskParamsDTO params) {
-        return withTitleCount(params.getTitleCount())
+        return withTitleCont(params.getTitleCount())
                 .and(withAssigneeId(params.getAssigneeId()))
                 .and(withStatus(params.getStatus()))
                 .and(withLabel(params.getLabelId()));
     }
 
-    private Specification<Task> withTitleCount(String titleCount) {
-        return (root, query, criteriaBuilder) -> titleCount == null
+    private Specification<Task> withTitleCont(String titleCont) {
+        return (root, query, criteriaBuilder) -> titleCont == null
                 ? criteriaBuilder.conjunction()
                 : criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("name")),
-                        "%" + titleCount.toLowerCase() + "%"
+                        "%" + titleCont.toLowerCase() + "%"
                 );
     }
 

@@ -124,16 +124,16 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void testIndexWithTitleCount() throws Exception {
-        var testTitleCount = testTask.getName();
-        var result = mockMvc.perform(get("/api/tasks?titleCount=" + testTitleCount).with(jwt()))
+    public void testIndexWithTitleCont() throws Exception {
+        var testTitleCont = testTask.getName();
+        var result = mockMvc.perform(get("/api/tasks?titleCont=" + testTitleCont).with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray().allSatisfy(element ->
                 assertThatJson(element)
-                        .and(v -> v.node("title").asString().containsIgnoringCase(testTitleCount))
+                        .and(v -> v.node("title").asString().containsIgnoringCase(testTitleCont))
         );
     }
 
