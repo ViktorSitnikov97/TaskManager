@@ -3,13 +3,16 @@ FROM eclipse-temurin:21-jdk
 ARG GRADLE_VERSION=8.5
 
 # Устанавливаем рабочую директорию
-WORKDIR /app
+WORKDIR /
 
 # Копируем все файлы проекта в рабочую директорию
-COPY . .
+COPY ./ .
 
 # Запускаем команду для сборки и установки приложения
-RUN gradle installDist
+RUN ./gradlew --no-daemon dependencies
 
-# Запускаем приложение с указанием профиля
-CMD ["java", "-cp", "/app/build/install/app/lib/*:/app/build/install/app/bin", "hexlet.code.AppApplication", "--spring.profiles.active=production"]
+RUN ./gradlew --no-daemon build
+
+EXPOSE 8080
+
+CMD java -jar build/libs/app-0.0.1-SNAPSHOT.jar
