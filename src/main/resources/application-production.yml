@@ -6,10 +6,10 @@ logging:
 
 spring:
   datasource:
-#    url: ${DATABASE_URL}
+    url: ${JDBC_DATABASE_URL}
     driver-class-name: org.postgresql.Driver
-#    username: ${DATABASE_USERNAME}
-#    password: ${DATABASE_PASSWORD}
+    username: ${USERNAME_DB}
+    password: ${PASSWORD_DB}
   jpa:
     generate-ddl: true
     hibernate:
