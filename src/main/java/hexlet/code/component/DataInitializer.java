@@ -45,8 +45,8 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private User supplyAdminData() {
-        var email = "hexlet@example.com";
-        var rawPassword = "password";
+        var email = "admin@example.com";
+        var rawPassword = "admin";
         var user = new User();
         user.setEmail(email);
         user.setPasswordDigest(passwordEncoder.encode(rawPassword));
