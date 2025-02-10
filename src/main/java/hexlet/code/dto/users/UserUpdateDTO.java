@@ -20,6 +20,6 @@ public class UserUpdateDTO {
     @Email
     private JsonNullable<String> email;
 
-    @Pattern(regexp = "\\w{6,}")
+    @Pattern(regexp = "\\w{3,}")
     private JsonNullable<String> password;
 }

@@ -19,6 +19,6 @@ public class UserCreateDTO {
     @Email
     private String email;
 
-    @Pattern(regexp = "\\w{6,}")
+    @Pattern(regexp = "\\w{3,}")
     private String password;
 }
