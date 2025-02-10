@@ -150,7 +150,7 @@ class UsersControllerTest {
         dto.setFirstName("new name");
         dto.setLastName("new last name");
         dto.setPassword("qwerty");
-//        dto.setEmail("new@mail.com");
+        dto.setEmail("new@mail.com");
 
         var request = put("/api/users/{id}", testUser.getId())
                 .with(token)
