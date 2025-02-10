@@ -48,7 +48,7 @@ Password: admin
 > * Аутентификация: Spring Security
 > * Автоматический маппинг: Mapstruct
 > * Документация по API-приложения: Springdoc Openapi, Swagger
-> * Тесты: JUnit 5, Mockwebserver, Datafaker
+> * Тесты: MockMvc, JUnit 5, JsonUnit, Instansio, Datafaker
 > * Отчет о тестах: Jacoco
 > * Линтер: Checkstyle
 > * Базы данных: H2 (development), PostgreSQL (production)
@@ -56,3 +56,14 @@ Password: admin
 > * [Задеплоено](https://task-manager-0831.onrender.com) на бесплатный сервер от Render
 
 ## Демонстрация
+![Снимок экрана от 2025-02-10 18-02-14](https://github.com/user-attachments/assets/2bd0ff85-7c87-448a-bbac-f1b2a7620eaa)
+![Снимок экрана от 2025-02-10 17-38-06](https://github.com/user-attachments/assets/c15bd1b5-3662-4a8f-9241-6146f66ffc9c)
+![Снимок экрана от 2025-02-10 17-42-21](https://github.com/user-attachments/assets/bcbb2091-b283-4ebf-8416-91675fce1b9c)
+![Снимок экрана от 2025-02-10 17-43-44](https://github.com/user-attachments/assets/eab09ae5-22cf-4c95-b552-c487645912d3)
+![Снимок экрана от 2025-02-10 17-44-31](https://github.com/user-attachments/assets/80205931-cfbe-4aaa-9135-8716f8100114)
+![Снимок экрана от 2025-02-10 17-44-41](https://github.com/user-attachments/assets/602dbd9c-620e-4223-a6ee-9b5f9ff78571)
+![Снимок экрана от 2025-02-10 17-44-44](https://github.com/user-attachments/assets/1ba5bc49-8562-490e-a5a6-8569ce5315c5)
+![Снимок экрана от 2025-02-10 17-47-04](https://github.com/user-attachments/assets/074b8e49-54ec-4785-9b1e-af124b12565c)
+![Снимок экрана от 2025-02-10 17-47-13](https://github.com/user-attachments/assets/f54dcc09-194d-499b-ab39-908fba1dfab4)
+
+
