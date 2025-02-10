@@ -1,7 +1,7 @@
 package hexlet.code.controller.api;
 
 
-import hexlet.code.dto.AuthRequest;
+//import hexlet.code.dto.AuthRequest;
 import hexlet.code.dto.users.UserCreateDTO;
 import hexlet.code.dto.users.UserDTO;
 import hexlet.code.dto.users.UserUpdateDTO;
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
+//import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+//import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RestController
 @RequestMapping("/api/users")
@@ -60,33 +60,33 @@ public class UserController {
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userUtils.isAuthor(#id)")
-    public ResponseEntity<UserDTO> update(@Valid @RequestBody UserUpdateDTO data, @PathVariable Long id) {
-
-        var oldEmail = userService.findById(id).getEmail();
-        var userDTO = userService.update(data, id);
-        var newEmail = userService.findById(id).getEmail();
-        String password = null;
-
-        if (data.getPassword() != null) {
-            password = data.getPassword().get();
-        }
-        String responseToken = null;
-        if (!oldEmail.equals(newEmail)) {
-            AuthRequest authData = new AuthRequest();
-            authData.setUsername(newEmail);
-            authData.setPassword(password);
-            RestClient restClient = RestClient.create();
-            responseToken = restClient.post()
-                    .uri("http://localhost:8080/api/login")
-                    .contentType(APPLICATION_JSON)
-                    .body(authData)
-                    .retrieve()
-                    .body(String.class);
-        }
-        if (responseToken != null) {
-            return ResponseEntity.ok().header("Authorization", responseToken).body(userDTO);
-        }
-        return ResponseEntity.ok().body(userDTO);
+    public UserDTO update(@Valid @RequestBody UserUpdateDTO data, @PathVariable Long id) {
+        return userService.update(data, id);
+//        var oldEmail = userService.findById(id).getEmail();
+//        var userDTO = userService.update(data, id);
+//        var newEmail = userService.findById(id).getEmail();
+//        String password = null;
+//
+//        if (data.getPassword() != null) {
+//            password = data.getPassword().get();
+//        }
+//        String responseToken = null;
+//        if (!oldEmail.equals(newEmail)) {
+//            AuthRequest authData = new AuthRequest();
+//            authData.setUsername(newEmail);
+//            authData.setPassword(password);
+//            RestClient restClient = RestClient.create();
+//            responseToken = restClient.post()
+//                    .uri("http://localhost:8080/api/login")
+//                    .contentType(APPLICATION_JSON)
+//                    .body(authData)
+//                    .retrieve()
+//                    .body(String.class);
+//        }
+//        if (responseToken != null) {
+//            return ResponseEntity.ok().header("Authorization", responseToken).body(userDTO);
+//        }
+//        return ResponseEntity.ok().body(userDTO);
     }
 
     @DeleteMapping(path = "/{id}")
