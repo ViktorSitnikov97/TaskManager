@@ -26,8 +26,8 @@ public class AuthenticationControllerTest {
     @Test
     public void testIndex() throws Exception {
         AuthRequest authRequest = new AuthRequest();
-        authRequest.setUsername("hexlet@example.com");
-        authRequest.setPassword("qwerty");
+        authRequest.setUsername("admin@example.com");
+        authRequest.setPassword("admin");
 
         MockHttpServletRequestBuilder request = post("/api/login").with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)

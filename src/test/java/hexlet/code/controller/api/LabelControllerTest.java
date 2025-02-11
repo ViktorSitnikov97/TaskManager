@@ -8,7 +8,6 @@ import hexlet.code.repository.LabelRepository;
 import hexlet.code.util.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +57,8 @@ public class LabelControllerTest {
 
     @BeforeEach
     public void setUp() {
+        labelRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
@@ -67,11 +68,6 @@ public class LabelControllerTest {
         labelRepository.save(testLabel);
     }
 
-    @AfterEach
-    public void clear() {
-        labelRepository.deleteAll();
-    }
-
     @Test
     public void testIndex() throws Exception {
         var result = mockMvc.perform(get("/api/labels").with(jwt()))
@@ -79,7 +75,10 @@ public class LabelControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+        var labels = labelRepository.findAll().stream()
+                .map(mapper::map)
+                .toList();
+        assertThatJson(body).isArray().isEqualTo(labels);
     }
 
     @Test

@@ -14,7 +14,6 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -80,6 +79,11 @@ public class TaskControllerTest {
 
     @BeforeEach
     public void setUp() {
+        taskRepository.deleteAll();
+        userRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        labelRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
@@ -105,14 +109,6 @@ public class TaskControllerTest {
         taskRepository.save(testTask);
     }
 
-    @AfterEach
-    public void clear() {
-        taskRepository.deleteAll();
-        userRepository.deleteAll();
-        taskStatusRepository.deleteAll();
-        labelRepository.deleteAll();
-    }
-
     @Test
     public void testIndex() throws Exception {
         var result = mockMvc.perform(get("/api/tasks").with(jwt()))
@@ -120,7 +116,10 @@ public class TaskControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+        var tasks = taskRepository.findAll().stream()
+                .map(mapper::map)
+                .toList();
+        assertThatJson(body).isArray().isEqualTo(tasks);
     }
 
     @Test

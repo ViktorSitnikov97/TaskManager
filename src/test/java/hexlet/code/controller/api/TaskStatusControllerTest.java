@@ -7,12 +7,12 @@ import hexlet.code.mapper.TaskStatusMapper;
 
 import hexlet.code.model.TaskStatus;
 
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 
 import hexlet.code.util.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +53,9 @@ public class TaskStatusControllerTest {
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
     private TaskStatusMapper mapper;
 
     @Autowired
@@ -65,6 +68,9 @@ public class TaskStatusControllerTest {
 
     @BeforeEach
     public void setUp() {
+        taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
@@ -74,11 +80,6 @@ public class TaskStatusControllerTest {
         taskStatusRepository.save(testTaskStatus);
     }
 
-    @AfterEach
-    public void clear() {
-        taskStatusRepository.deleteAll();
-    }
-
     @Test
     public void testIndex() throws Exception {
         var result = mockMvc.perform(get("/api/task_statuses").with(jwt()))
@@ -86,7 +87,10 @@ public class TaskStatusControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+        var taskStatuses = taskStatusRepository.findAll().stream()
+                .map(mapper::map)
+                .toList();
+        assertThatJson(body).isArray().isEqualTo(taskStatuses);
     }
 
     @Test

@@ -5,11 +5,11 @@ import hexlet.code.dto.users.UserCreateDTO;
 
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +50,9 @@ class UsersControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
     private UserMapper mapper;
 
     @Autowired
@@ -64,6 +67,9 @@ class UsersControllerTest {
 
     @BeforeEach
     public void setUp() {
+        taskRepository.deleteAll();
+        userRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
@@ -75,11 +81,6 @@ class UsersControllerTest {
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
-    @AfterEach
-    public void clear() {
-        userRepository.deleteAll();
-    }
-
     @Test
     public void testIndex() throws Exception {
         var result = mockMvc.perform(get("/api/users").with(jwt()))
@@ -87,7 +88,10 @@ class UsersControllerTest {
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+        var users = userRepository.findAll().stream()
+                .map(mapper::map)
+                .toList();
+        assertThatJson(body).isArray().isEqualTo(users);
     }
 
     @Test
