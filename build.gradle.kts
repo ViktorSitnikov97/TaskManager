@@ -27,7 +27,7 @@ repositories {
 }
 
 val activeProfile = System.getenv("SPRING_PROFILES_ACTIVE") ?: "development"
-
+project.logger.info("activeProfile = " + activeProfile);
 dependencies {
 	compileOnly("org.projectlombok:lombok:1.18.34")
 	annotationProcessor("org.projectlombok:lombok:1.18.34")
@@ -48,10 +48,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	if (activeProfile == "production") {
+	if (activeProfile.equals("production")) {
 		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 	}
-	
+	project.logger.info(activeProfile)
+
 	implementation("net.datafaker:datafaker:2.4.0")
 	implementation("org.instancio:instancio-junit:5.0.1")
 
