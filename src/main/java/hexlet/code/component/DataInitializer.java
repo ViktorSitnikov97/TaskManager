@@ -33,13 +33,20 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        userRepository.save(supplyAdminData());
+        var dataAdmin = supplyAdminData();
+        var user = userRepository.findByEmail(dataAdmin.getEmail())
+                        .orElse(dataAdmin);
+        userRepository.save(user);
 
-        for (var taskStatus : supplyTaskStatusesData()) {
+        for (var taskStatusData : supplyTaskStatusesData()) {
+            var taskStatus = taskStatusRepository.findBySlug(taskStatusData.getSlug())
+                            .orElse(taskStatusData);
             taskStatusRepository.save(taskStatus);
         }
 
-        for (var label : supplyLabelsData()) {
+        for (var labelData : supplyLabelsData()) {
+            var label = labelRepository.findByName(labelData.getName())
+                            .orElse(labelData);
             labelRepository.save(label);
         }
     }
