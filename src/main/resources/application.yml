@@ -25,7 +25,7 @@ spring:
       mode: always
 
   profiles:
-    active: development
+    default: development
 
 rsa:
   private-key: classpath:certs/private.pem
