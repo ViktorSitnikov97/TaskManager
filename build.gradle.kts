@@ -6,7 +6,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("io.freefair.lombok") version "8.6"
 
-	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
+//	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 group = "hexlet.code"
@@ -48,9 +48,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-//	if (activeProfile == "production") {
+	if (activeProfile == "production") {
 		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
-//	}
+	}
 	
 	implementation("net.datafaker:datafaker:2.4.0")
 	implementation("org.instancio:instancio-junit:5.0.1")

@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
@@ -30,22 +32,28 @@ public class SecurityConfig {
     private PasswordEncoder passwordEncoder;
     private UserService userService;
 
+    public static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/api/login/**"),
+            new AntPathRequestMatcher("/api/login/"),
+            new AntPathRequestMatcher("/welcome"),
+            new AntPathRequestMatcher("/"),
+            new AntPathRequestMatcher("/exception"),
+            new AntPathRequestMatcher("/v3/api-docs/**"),
+            new AntPathRequestMatcher("/swagger-ui.html"),
+            new AntPathRequestMatcher("/swagger-ui/**"),
+            new AntPathRequestMatcher("/index.html"),
+            new AntPathRequestMatcher("/api-docs/**"),
+            new AntPathRequestMatcher("/proxy/**"),
+            new AntPathRequestMatcher("/assets/**")
+    );
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
             throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/welcome").permitAll()
-                        .requestMatchers("/exception").permitAll()
-                        .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/api/login/**").permitAll()
-                        .requestMatchers("/index.html").permitAll()
-                        .requestMatchers("/assets/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/swagger-ui.html").permitAll()
-                        .requestMatchers("/api-docs/**").permitAll()
+                        .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((rs) -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))
