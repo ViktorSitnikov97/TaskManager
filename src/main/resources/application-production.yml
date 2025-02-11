@@ -6,6 +6,7 @@ spring:
     password: ${PASSWORD_DB}
   jpa:
     properties:
+      hibernate:
         format_sql: true
 
 springdoc:
