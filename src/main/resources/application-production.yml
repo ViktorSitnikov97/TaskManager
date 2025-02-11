@@ -8,6 +8,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  config:
+    activate:
+      on-profile: production
 
 springdoc:
   swagger-ui:
