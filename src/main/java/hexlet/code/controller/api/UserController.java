@@ -5,9 +5,8 @@ import hexlet.code.dto.users.UserCreateDTO;
 import hexlet.code.dto.users.UserDTO;
 import hexlet.code.dto.users.UserUpdateDTO;
 import hexlet.code.service.UserService;
-import hexlet.code.utils.UserUtils;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,13 +25,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@AllArgsConstructor
 public class UserController {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserUtils userUtils;
+    private final UserService userService;
 
     @GetMapping(path = "")
     public ResponseEntity<List<UserDTO>> index() {

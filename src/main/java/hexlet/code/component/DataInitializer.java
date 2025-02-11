@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
-
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TaskStatusRepository taskStatusRepository;
@@ -52,8 +51,8 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private User supplyAdminData() {
-        var email = "hexlet@example.com";
-        var rawPassword = "qwerty";
+        var email = "admin@example.com";
+        var rawPassword = "admin";
         var user = new User();
         user.setEmail(email);
         user.setPasswordDigest(passwordEncoder.encode(rawPassword));

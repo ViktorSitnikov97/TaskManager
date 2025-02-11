@@ -26,7 +26,6 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-
     private JwtDecoder jwtDecoder;
     private PasswordEncoder passwordEncoder;
     private UserService userService;
