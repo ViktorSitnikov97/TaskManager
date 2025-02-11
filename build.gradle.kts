@@ -26,7 +26,7 @@ repositories {
 	mavenCentral()
 }
 
-val activeProfile = project.findProperty("activeProfile") as String? ?: "development"
+val activeProfile = System.getenv("SPRING_PROFILES_ACTIVE") ?: "development"
 
 dependencies {
 	compileOnly("org.projectlombok:lombok:1.18.34")
