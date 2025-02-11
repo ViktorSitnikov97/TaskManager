@@ -50,7 +50,6 @@ dependencies {
 
 	if (activeProfile == "production") {
 		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
-		implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.4")
 	}
 	
 	implementation("net.datafaker:datafaker:2.4.0")
