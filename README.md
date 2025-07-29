@@ -32,8 +32,8 @@ Task Manager – система управления задачами, подо�
 
 ## Установка и запуск локально
 ```
-git clone git@github.com:ViktorSitnikov97/java-project-99.git
-cd java-project-99/
+git clone git@github.com:ViktorSitnikov97/TaskManager.git
+cd TaskManager/
 make run
 ```
 
