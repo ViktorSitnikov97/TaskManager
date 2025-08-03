@@ -29,6 +29,7 @@ sonar {
 		property("sonar.projectKey", "ViktorSitnikov97_TaskManager")
 		property("sonar.organization", "viktorsitnikov97")
 		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.ci.autoconfig.disabled", "true")
 	}
 }
 
