@@ -23,6 +23,15 @@ java {
 	sourceCompatibility = JavaVersion.VERSION_21
 }
 
+sonar {
+	properties {
+		property("sonar.projectName", "TaskManager")
+		property("sonar.projectKey", "ViktorSitnikov97_TaskManager")
+		property("sonar.organization", "viktorsitnikov97")
+		property("sonar.host.url", "https://sonarcloud.io")
+	}
+}
+
 checkstyle {
 	configFile = file("config/checkstyle/checkstyle.xml")
 	toolVersion = "10.13.0"    // your choice here
